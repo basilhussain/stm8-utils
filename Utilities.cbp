@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="STM8 Utilities" />
+		<Option pch_mode="2" />
+		<Option compiler="sdcc" />
+		<Build>
+			<Target title="Library (Medium)">
+				<Option output="utils.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="obj/Library-Medium" />
+				<Option type="2" />
+				<Option compiler="sdcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-DPOP_COUNT_LUT_LARGE" />
+					<Add option="-DCTZ_LUT_LARGE" />
+					<Add option="-DCLZ_LUT_LARGE" />
+				</Compiler>
+			</Target>
+			<Target title="Library (Large)">
+				<Option output="utils-large.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="obj/Library-Large" />
+				<Option type="2" />
+				<Option compiler="sdcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="--model-large" />
+					<Add option="-DPOP_COUNT_LUT_LARGE" />
+					<Add option="-DCTZ_LUT_LARGE" />
+					<Add option="-DCLZ_LUT_LARGE" />
+				</Compiler>
+			</Target>
+			<Target title="Test">
+				<Option output="bin/Test/test.hex" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="obj/Test/" />
+				<Option external_deps="utils-large.lib;" />
+				<Option type="5" />
+				<Option compiler="sdcc" />
+				<Compiler>
+					<Add option="--out-fmt-ihx" />
+					<Add option="--model-large" />
+					<Add option="--debug" />
+					<Add option="-DF_CPU=16000000UL" />
+				</Compiler>
+				<Linker>
+					<Add library="utils-large.lib" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="Library (Medium);Library (Large);Test;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add option="-mstm8" />
+			<Add option="--std-c99" />
+		</Compiler>
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="ref.c">
+			<Option compilerVar="CC" />
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="ref.h">
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="uart.c">
+			<Option compilerVar="CC" />
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="uart.h">
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="uart_regs.h">
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="ucsim.c">
+			<Option compilerVar="CC" />
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="ucsim.h">
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="utils.h" />
+		<Unit filename="utils/bswap_16.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/bswap_32.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/clz_16.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/clz_32.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/clz_8.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/common.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/common.h">
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/ctz_16.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/ctz_32.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/ctz_8.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/ffs_16.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/ffs_32.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/ffs_8.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/pop_count_16.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/pop_count_32.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/pop_count_8.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/rot_left_16.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/rot_left_32.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/rot_left_8.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/rot_right_16.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/rot_right_32.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/rot_right_8.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/swap.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Extensions>
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
