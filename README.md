@@ -184,29 +184,29 @@ void main(void) {
 
 To benchmark the library functions, the execution speed of each was compared with that of it's associated plain C reference implementation (see `ref.c`). Each function was run for 10,000 iterations and the total number of processor execution cycles measured.
 
-| Function | Reference C | Library ASM | Ratio |
-| ---- | ---: | ---: | ---: |
-| swap | 280,008 | 140,008 | 50% |
-| bswap_16 | 290,010 | 190,010 | 66% |
-| bswap_32 | 900,014 | 250,014 | 28% |
-| pop_count_8 | 590,008 | 170,008 | 29% |
-| pop_count_16 | 1,990,010 | 260,010 | 13% |
-| pop_count_32 | 5,070,014 | 390,014 | 8% |
-| ctz_8 | 530,008 | 180,008 | 34% |
-| ctz_16 | 970,010 | 250,010 | 26% |
-| ctz_32 | 2,180,014 | 360,014 | 17% |
-| clz_8 | 450,008 | 170,008 | 38% |
-| clz_16 | 1,420,010 | 240,010 | 17% |
-| clz_32 | 4,250,014 | 340,014 | 8% |
-| ffs_8 | 670,008 | 270,008 | 40% |
-| ffs_16 | 1,110,010 | 340,010 | 31% |
-| ffs_32 | 2,380,014 | 510,014 | 21% |
-| rotate_left_8 | 650,008 | 550,008 | 85% |
-| rotate_left_16 | 1,040,010 | 930,010 | 89% |
-| rotate_left_32 | 2,260,014 | 1,940,014 | 86% |
-| rotate_right_8 | 650,008 | 550,008 | 85% |
-| rotate_right_16 | 1,020,010 | 930,010 | 91% |
-| rotate_right_32 | 2,240,014 | 1,940,014 | 87% |
+| Function        | Reference C | Library ASM | Ratio |
+| --------------- | ----------: | ----------: | ----: |
+| swap            |     460,009 |     260,009 |   57% |
+| bswap_16        |     440,010 |     350,010 |   80% |
+| bswap_32        |   1,130,015 |     420,015 |   37% |
+| pop_count_8     |     710,009 |     290,009 |   41% |
+| pop_count_16    |   2,140,010 |     410,010 |   19% |
+| pop_count_32    |   5,380,015 |     540,015 |   10% |
+| ctz_8           |     660,009 |     300,009 |   45% |
+| ctz_16          |   1,130,010 |     400,010 |   35% |
+| ctz_32          |   2,360,015 |     510,015 |   22% |
+| clz_8           |     570,009 |     290,009 |   51% |
+| clz_16          |   1,640,010 |     390,010 |   24% |
+| clz_32          |   4,550,015 |     490,015 |   11% |
+| ffs_8           |     890,009 |     480,009 |   54% |
+| ffs_16          |   1,370,010 |     590,010 |   43% |
+| ffs_32          |   2,670,015 |     770,015 |   29% |
+| rotate_left_8   |     770,009 |     680,009 |   88% |
+| rotate_left_16  |   1,350,010 |   1,200,010 |   89% |
+| rotate_left_32  |   2,970,015 |   2,570,015 |   87% |
+| rotate_right_8  |     770,009 |     680,009 |   88% |
+| rotate_right_16 |   1,330,010 |   1,260,010 |   95% |
+| rotate_right_32 |   2,950,015 |   2,690,015 |   91% |
 
 The benchmark was run using the [μCsim](http://mazsola.iit.uni-miskolc.hu/~drdani/embedded/ucsim/) microcontroller simulator included with SDCC, and measurements were obtained using the timer commands of the simulator.
 

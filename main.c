@@ -387,6 +387,24 @@ void benchmark_rotate(void) {
 #undef rotate_count
 }
 
+/*
+void benchmark_rotate_linearity(void) {
+	static const uint32_t val_32 = 0x55555555UL;
+
+	for(uint8_t i = 0; i < 35; i++) {
+		printf("%u\n", i);
+
+		benchmark_marker_start();
+		rotate_left_32_ref(val_32, i);
+		benchmark_marker_end();
+
+		benchmark_marker_start();
+		rotate_left_32(val_32, i);
+		benchmark_marker_end();
+	}
+}
+*/
+
 void main(void) {
 	test_result_t results = { 0, 0 };
 
@@ -408,6 +426,12 @@ void main(void) {
 	benchmark_rotate();
 
 	puts(hrule_str);
+
+	/*
+	benchmark_rotate_linearity();
+
+	puts(hrule_str);
+	*/
 
 	test_swap(&results);
 	test_ctz_clz_ffs(&results);
