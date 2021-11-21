@@ -218,7 +218,7 @@ The benchmark was run using the [μCsim](http://mazsola.iit.uni-miskolc.hu/~drda
 
 Other notes:
 
-* The count of cycles consumed show here includes the loop iteration, but for the purposes of comparison, because it is a common overhead and counts equally against both implementations, this can be ignored.
+* The count of cycles consumed shown here includes the loop iteration, but for the purposes of comparison, because it is a common overhead and counts equally against both implementations, this can be ignored.
 * All C code was compiled using SDCC's default 'balanced' optimisation level (i.e. with neither `--opt-code-speed` or `--opt-code-size`).
 * Where library ASM functions have multiple alternate implementations, the fastest (typically table-look-up-based) was used.
 
@@ -228,7 +228,7 @@ It is also worth making some remarks regarding the apparent slim improvement of 
 
 It can be argued that non-linearity of execution speed is a desirable trait for certain use cases (e.g. cryptography), but due to the nature of the target platform of this library (8-bit microcontrollers), such things are not a concern.
 
-Another area also worth commenting on is regarding the benchmark of `div_s16`. It is uncertain whether μCsim accurately simulates the STM8's `DIVW` instruction (as used by `div_s16`) in terms of number of cycles consumed. The *STM8 CPU Programming Manual (PM0044)* documents that `DIVW` can take between 2 and 17 cycles depending on the values operated on, which μCsim may not do. Therefore, the benchmark result for `div_s16` may not accurately reflect performance on real hardware.
+Another area also worth commenting on is regarding the benchmark of `div_s16`. The μCsim simulator does not accurately simulate the STM8's `DIVW` instruction (as used by `div_s16`) in terms of number of cycles consumed. The *STM8 CPU Programming Manual (PM0044)* documents that `DIVW` can take between 2 and 17 cycles depending on the values operated on, whereas μCsim (at time of writing, as of SDCC v4.1.0) always [counts it as taking 11 cycles](https://sourceforge.net/p/sdcc/code/HEAD/tree/tags/sdcc-4.1.0/sdcc/sim/ucsim/stm8.src/inst.cc#l706) regardless of operand values. Therefore, the benchmark result for `div_s16` will not accurately reflect performance on real hardware.
 
 # Code Size
 
