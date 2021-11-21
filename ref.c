@@ -2,7 +2,7 @@
  *
  * ref.c - Reference implementations
  *
- * Copyright (c) 2020 Basil Hussain
+ * Copyright (c) 2021 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -204,4 +204,9 @@ uint32_t rotate_right_32_ref(uint32_t value, uint8_t count) {
 	const uint8_t mask = CHAR_BIT * sizeof(value) - 1;
 	count &= mask;
 	return (value >> count) | (value << (-count & mask));
+}
+
+void div_s16_ref(int16_t x, int16_t y, div_s16_t *result) {
+	result->quot = x / y;
+	result->rem = x % y;
 }

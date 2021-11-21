@@ -2,7 +2,7 @@
 
 This is a library for the STM8 microcontroller and [SDCC](http://sdcc.sourceforge.net/) compiler providing an assortment of pseudo-intrinsic functions for bit manipulation, counting, inspection, and calculation. All functions have been written in hand-optimised assembly code for the fastest possible execution speed.
 
-Functions are provided for nibble/byte swapping, population count (i.e. count of 1 bits), counting of trailing/leading zero bits, find-first-set (i.e. index of first 1-bit), bit rotation, and parity calculation.
+Functions are provided for nibble/byte swapping, population count (i.e. count of 1 bits), counting of trailing/leading zero bits, find-first-set (i.e. index of first 1-bit), bit rotation, parity, and simultaneous division quotient/remainder calculation.
 
 In addition to the library functions, a test and benchmark program (in C) is also included that contains reference implementations for each library function, used to verify proper operation of the library functions and to benchmark against.
 
@@ -147,6 +147,10 @@ Calculates and returns a value of 0 or 1 representing the *odd* parity of the 16
 
 Calculates and returns a value of 0 or 1 representing the *odd* parity of the 32-bit argument `value`. Note that this function is implemented as a macro based upon `pop_count_32()`.
 
+### `void div_s16(int16_t x, int16_t y, div_s16_t *result)`
+
+Calculates simultaneously both the quotient and the remainder of the integer division of dividend `x` by divisor `y`. The result is placed in the `div_s16_t` structure pointed to by `result`; the structure contains two `int16_t` members named `quot` and `rem`. Be warned that when dividing by zero, the resulting values will be indeterminate. (Side note: an output argument is used here because SDCC does not (yet) support returning structs from functions - hence why `div`, `ldiv`, etc. are not included in the standard library).
+
 ## Aliases
 
 For convenience, the following aliases are provided (via macro definitions) to some of the library functions. These aliases match the names of functions provided on other platforms by standard C libraries or compiler built-ins.
@@ -162,6 +166,7 @@ For convenience, the following aliases are provided (via macro definitions) to s
 #define ffsl(x) ffs_32(x)
 #define parity(x) parity_even_16(x)
 #define parityl(x) parity_even_32(x)
+#define div(x, y, r) div_s16(x, y, r)
 ```
 
 ## Example
@@ -207,6 +212,7 @@ To benchmark the library functions, the execution speed of each was compared wit
 | rotate_right_8  |     770,009 |     680,009 |   88% |
 | rotate_right_16 |   1,330,010 |   1,260,010 |   95% |
 | rotate_right_32 |   2,950,015 |   2,690,015 |   91% |
+| div_s16         |   1,620,015 |     880,015 |   54% |
 
 The benchmark was run using the [μCsim](http://mazsola.iit.uni-miskolc.hu/~drdani/embedded/ucsim/) microcontroller simulator included with SDCC, and measurements were obtained using the timer commands of the simulator.
 
@@ -221,6 +227,8 @@ It is also worth making some remarks regarding the apparent slim improvement of 
 ![left-rotate-linearity](imgs/left-rotate-linearity.png)
 
 It can be argued that non-linearity of execution speed is a desirable trait for certain use cases (e.g. cryptography), but due to the nature of the target platform of this library (8-bit microcontrollers), such things are not a concern.
+
+Another area also worth commenting on is regarding the benchmark of `div_s16`. It is uncertain whether μCsim accurately simulates the STM8's `DIVW` instruction (as used by `div_s16`) in terms of number of cycles consumed. The *STM8 CPU Programming Manual (PM0044)* documents that `DIVW` can take between 2 and 17 cycles depending on the values operated on, which μCsim may not do. Therefore, the benchmark result for `div_s16` may not accurately reflect performance on real hardware.
 
 # Code Size
 

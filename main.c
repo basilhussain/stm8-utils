@@ -3,7 +3,7 @@
  * main.c - Test and benchmarking code for STM8 pseudo-intrinsic bit-
  *          manipulation utility function library
  *
- * Copyright (c) 2020 Basil Hussain
+ * Copyright (c) 2021 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -80,7 +80,7 @@ static const char hrule_str[] = "----------------------------------------";
 
 /******************************************************************************/
 
-void test_swap(test_result_t *result) {
+static void test_swap(test_result_t *result) {
 	static const uint8_t vals_8[] = {
 		0xAB, 0x00, 0xFF,
 	};
@@ -113,7 +113,7 @@ void test_swap(test_result_t *result) {
 	}
 }
 
-void benchmark_swap(void) {
+static void benchmark_swap(void) {
 	static const uint8_t val_8 = 0xAB;
 	static const uint16_t val_16 = 0xAABB;
 	static const uint32_t val_32 = 0xAABBCCDDUL;
@@ -128,7 +128,7 @@ void benchmark_swap(void) {
 	benchmark("bswap_32", bswap_32(val_32));
 }
 
-void test_pop_count(test_result_t *result) {
+static void test_pop_count(test_result_t *result) {
 	static const uint8_t vals_8[] = {
 		0x00, 0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3F, 0x7F,
 		0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE, 0xFF,
@@ -172,7 +172,7 @@ void test_pop_count(test_result_t *result) {
 	}
 }
 
-void benchmark_pop_count(void) {
+static void benchmark_pop_count(void) {
 	static const uint8_t val_8 = 0x55;
 	static const uint16_t val_16 = 0x5555;
 	static const uint32_t val_32 = 0x55555555UL;
@@ -187,7 +187,7 @@ void benchmark_pop_count(void) {
 	benchmark("pop_count_32", pop_count_32(val_32));
 }
 
-void test_ctz_clz_ffs(test_result_t *result) {
+static void test_ctz_clz_ffs(test_result_t *result) {
 	static const uint8_t vals_8[] = {
 		0x00, 0x01, 0x10, 0xFF, 0x0E, 0x0C, 0x08, 0xE0, 0xC0, 0x80, 0x5A, 0x88,
 	};
@@ -254,7 +254,7 @@ void test_ctz_clz_ffs(test_result_t *result) {
 	}
 }
 
-void benchmark_ctz_clz_ffs(void) {
+static void benchmark_ctz_clz_ffs(void) {
 	static const uint8_t val_8 = 0x18;
 	static const uint16_t val_16 = 0x0180;
 	static const uint32_t val_32 = 0x00018000UL;
@@ -287,7 +287,7 @@ void benchmark_ctz_clz_ffs(void) {
 	benchmark("ffs_32", ffs_32(val_32));
 }
 
-void test_rotate(test_result_t *result) {
+static void test_rotate(test_result_t *result) {
 	static const uint8_t vals_8[] = {
 		0x80, 0x01, 0xFF, 0x00, 0xDD,
 	};
@@ -359,7 +359,7 @@ void test_rotate(test_result_t *result) {
 	}
 }
 
-void benchmark_rotate(void) {
+static void benchmark_rotate(void) {
 	static const uint8_t val_8 = 0x55;
 	static const uint16_t val_16 = 0x5555;
 	static const uint32_t val_32 = 0x55555555UL;
@@ -388,7 +388,7 @@ void benchmark_rotate(void) {
 }
 
 /*
-void benchmark_rotate_linearity(void) {
+static void benchmark_rotate_linearity(void) {
 	static const uint32_t val_32 = 0x55555555UL;
 
 	for(uint8_t i = 0; i < 35; i++) {
@@ -405,6 +405,57 @@ void benchmark_rotate_linearity(void) {
 }
 */
 
+static void test_div(test_result_t *result) {
+	static const struct {
+		int a;
+		int b;
+	} vals[] = {
+		{ 0, 1 },
+		{ 1, 1 },
+		{ 1, 2 },
+		{ -1, 1 },
+		{ -1, 2 },
+		{ 1, -1 },
+		{ 1, -2 },
+		{ -1, -1 },
+		{ -1, -2 },
+		{ 1000, 2 },
+		{ -1000, 2 },
+		{ 10000, 300 },
+		{ 10000, -300 },
+		{ 32767, 3 },
+		{ -32768, 3 },
+	};
+	div_s16_t foo, bar;
+	bool pass_fail;
+
+	for(size_t i = 0; i < (sizeof(vals) / sizeof(vals[0])); i++) {
+		div_s16_ref(vals[i].a, vals[i].b, &foo);
+		div_s16(vals[i].a, vals[i].b, &bar);
+		pass_fail = (foo.quot == bar.quot && foo.rem == bar.rem && ((bar.quot * vals[i].b) + bar.rem) == vals[i].a);
+		printf(
+			"%d, %d: div_s16_ref = { quot = %d, rem = %d }, div_s16 = { quot = %d, rem = %d } - %s\n",
+			vals[i].a,
+			vals[i].b,
+			foo.quot,
+			foo.rem,
+			bar.quot,
+			bar.rem,
+			(pass_fail ? pass_str : fail_str)
+		);
+		count_test_result(pass_fail, result);
+	}
+}
+
+static void benchmark_div(void) {
+	static const int16_t val_a = -3000;
+	static const int16_t val_b = 45;
+	div_s16_t foo;
+
+	benchmark("div_s16_ref", div_s16_ref(val_a, val_b, &foo));
+	benchmark("div_s16", div_s16(val_a, val_b, &foo));
+}
+
 void main(void) {
 	test_result_t results = { 0, 0 };
 
@@ -420,10 +471,20 @@ void main(void) {
 
 	puts(hrule_str);
 
+	test_swap(&results);
+	test_ctz_clz_ffs(&results);
+	test_pop_count(&results);
+	test_rotate(&results);
+	test_div(&results);
+	printf("TOTAL RESULTS: passed = %u, failed = %u\n", results.pass_count, results.fail_count);
+
+	puts(hrule_str);
+
 	benchmark_swap();
 	benchmark_pop_count();
 	benchmark_ctz_clz_ffs();
 	benchmark_rotate();
+	benchmark_div();
 
 	puts(hrule_str);
 
@@ -432,14 +493,6 @@ void main(void) {
 
 	puts(hrule_str);
 	*/
-
-	test_swap(&results);
-	test_ctz_clz_ffs(&results);
-	test_pop_count(&results);
-	test_rotate(&results);
-	printf("TOTAL RESULTS: passed = %u, failed = %u\n", results.pass_count, results.fail_count);
-
-	puts(hrule_str);
 
 	while(1);
 }

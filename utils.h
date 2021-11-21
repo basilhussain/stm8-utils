@@ -2,7 +2,7 @@
  *
  * utils.h - Header for STM8 pseudo-intrinsic bit-manipulation utility functions
  *
- * Copyright (c) 2020 Basil Hussain
+ * Copyright (c) 2021 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,15 @@
 #define UTILS_H_
 
 #include <stdint.h>
+
+typedef struct {
+	int quot;
+	int rem;
+} div_s16_t;
+
+typedef div_s16_t div_t;
+
+/******************************************************************************/
 
 extern uint8_t swap(const uint8_t value);
 extern uint16_t bswap_16(const uint16_t value);
@@ -56,6 +65,8 @@ extern uint16_t rotate_right_16(uint16_t value, uint8_t count);
 extern uint32_t rotate_left_32(uint32_t value, uint8_t count);
 extern uint32_t rotate_right_32(uint32_t value, uint8_t count);
 
+extern void div_s16(int16_t x, int16_t y, div_s16_t *result);
+
 /******************************************************************************/
 
 #define parity_even_8(x) (pop_count_8(x) & (uint8_t)0x01)
@@ -80,5 +91,6 @@ extern uint32_t rotate_right_32(uint32_t value, uint8_t count);
 #define ffsl(x) ffs_32(x)
 #define parity(x) parity_even_16(x)
 #define parityl(x) parity_even_32(x)
+#define div(x, y, r) div_s16(x, y, r)
 
 #endif // UTILS_H_

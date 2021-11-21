@@ -2,7 +2,7 @@
  *
  * ref.h - Header for reference implementations
  *
- * Copyright (c) 2020 Basil Hussain
+ * Copyright (c) 2021 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@
 #define REF_H_
 
 #include <stdint.h>
+#include "utils.h"
 
 extern uint8_t swap_ref(const uint8_t value);
 extern uint16_t bswap_16_ref(const uint16_t value);
@@ -55,5 +56,7 @@ extern uint16_t rotate_left_16_ref(uint16_t value, uint8_t count);
 extern uint16_t rotate_right_16_ref(uint16_t value, uint8_t count);
 extern uint32_t rotate_left_32_ref(uint32_t value, uint8_t count);
 extern uint32_t rotate_right_32_ref(uint32_t value, uint8_t count);
+
+extern void div_s16_ref(int16_t x, int16_t y, div_s16_t *result);
 
 #endif // REF_H_

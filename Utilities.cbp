@@ -136,6 +136,11 @@
 			<Option target="Library (Medium)" />
 			<Option target="Library (Large)" />
 		</Unit>
+		<Unit filename="utils/div.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
 		<Unit filename="utils/ffs_16.c">
 			<Option compilerVar="CC" />
 			<Option target="Library (Medium)" />
