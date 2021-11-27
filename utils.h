@@ -30,9 +30,14 @@
 #include <stdint.h>
 
 typedef struct {
-	int quot;
-	int rem;
+	int16_t quot;
+	int16_t rem;
 } div_s16_t;
+
+typedef struct {
+	uint16_t quot;
+	uint16_t rem;
+} div_u16_t;
 
 typedef div_s16_t div_t;
 
@@ -66,6 +71,7 @@ extern uint32_t rotate_left_32(uint32_t value, uint8_t count);
 extern uint32_t rotate_right_32(uint32_t value, uint8_t count);
 
 extern void div_s16(int16_t x, int16_t y, div_s16_t *result);
+extern void div_u16(uint16_t x, uint16_t y, div_u16_t *result);
 
 /******************************************************************************/
 

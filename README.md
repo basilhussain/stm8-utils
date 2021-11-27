@@ -149,7 +149,15 @@ Calculates and returns a value of 0 or 1 representing the *odd* parity of the 32
 
 ### `void div_s16(int16_t x, int16_t y, div_s16_t *result)`
 
-Calculates simultaneously both the quotient and the remainder of the integer division of dividend `x` by divisor `y`. The result is placed in the `div_s16_t` structure pointed to by `result`; the structure contains two `int16_t` members named `quot` and `rem`. Be warned that when dividing by zero, the resulting values will be indeterminate. (Side note: an output argument is used here because SDCC does not (yet) support returning structs from functions - hence why `div`, `ldiv`, etc. are not included in the standard library).
+Calculates simultaneously both the quotient and the remainder of the *signed* integer division of dividend `x` by divisor `y`. The result is placed in the `div_s16_t` structure pointed to by `result`; the structure contains two `int16_t` members named `quot` and `rem`. Be warned that when dividing by zero, the resulting values will be indeterminate.
+
+### `void div_u16(uint16_t x, uint16_t y, div_u16_t *result)`
+
+Calculates simultaneously both the quotient and the remainder of the *unsigned* integer division of dividend `x` by divisor `y`. The result is placed in the `div_u16_t` structure pointed to by `result`; the structure contains two `uint16_t` members named `quot` and `rem`. Be warned that when dividing by zero, the resulting values will be indeterminate.
+
+## Function Remarks
+
+For the `div_s16` and `div_u16` functions, an output argument is used to return the result because SDCC does not (at time of writing) support passing structs by value as function arguments or returning them from functions. This is the reason why standard functions `div`, `ldiv`, etc. are not included in SDCC's standard library.
 
 ## Aliases
 
@@ -213,6 +221,7 @@ To benchmark the library functions, the execution speed of each was compared wit
 | rotate_right_16 |   1,330,010 |   1,260,010 |   95% |
 | rotate_right_32 |   2,950,015 |   2,690,015 |   91% |
 | div_s16         |   1,620,015 |     880,015 |   54% |
+| div_u16         |     920,017 |     710,015 |   77% |
 
 The benchmark was run using the [μCsim](http://mazsola.iit.uni-miskolc.hu/~drdani/embedded/ucsim/) microcontroller simulator included with SDCC, and measurements were obtained using the timer commands of the simulator.
 
@@ -228,7 +237,7 @@ It is also worth making some remarks regarding the apparent slim improvement of 
 
 It can be argued that non-linearity of execution speed is a desirable trait for certain use cases (e.g. cryptography), but due to the nature of the target platform of this library (8-bit microcontrollers), such things are not a concern.
 
-Another area also worth commenting on is regarding the benchmark of `div_s16`. The μCsim simulator does not accurately simulate the STM8's `DIVW` instruction (as used by `div_s16`) in terms of number of cycles consumed. The *STM8 CPU Programming Manual (PM0044)* documents that `DIVW` can take between 2 and 17 cycles depending on the values operated on, whereas μCsim (at time of writing, as of SDCC v4.1.0) always [counts it as taking 11 cycles](https://sourceforge.net/p/sdcc/code/HEAD/tree/tags/sdcc-4.1.0/sdcc/sim/ucsim/stm8.src/inst.cc#l706) regardless of operand values. Therefore, the benchmark result for `div_s16` will not accurately reflect performance on real hardware.
+Another area also worth commenting on is regarding the benchmarks of `div_s16` and `div_u16`. The μCsim simulator does not accurately simulate the STM8's `DIVW` instruction (as used by those functions) in terms of number of cycles consumed. The *STM8 CPU Programming Manual (PM0044)* documents that `DIVW` can take between 2 and 17 cycles depending on the values operated on, whereas μCsim (at time of writing, as of SDCC v4.1.0) always [counts it as taking 11 cycles](https://sourceforge.net/p/sdcc/code/HEAD/tree/tags/sdcc-4.1.0/sdcc/sim/ucsim/stm8.src/inst.cc#l706) regardless of operand values. Therefore, the benchmark results for `div_s16` and `div_u16` will not accurately reflect performance on real hardware.
 
 # Code Size
 

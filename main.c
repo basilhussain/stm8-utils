@@ -407,9 +407,9 @@ static void benchmark_rotate_linearity(void) {
 
 static void test_div(test_result_t *result) {
 	static const struct {
-		int a;
-		int b;
-	} vals[] = {
+		int16_t a;
+		int16_t b;
+	} vals_s[] = {
 		{ 0, 1 },
 		{ 1, 1 },
 		{ 1, 2 },
@@ -426,21 +426,53 @@ static void test_div(test_result_t *result) {
 		{ 32767, 3 },
 		{ -32768, 3 },
 	};
-	div_s16_t foo, bar;
+	static const struct {
+		uint16_t a;
+		uint16_t b;
+	} vals_u[] = {
+		{ 0, 1 },
+		{ 1, 1 },
+		{ 1, 2 },
+		{ 1000, 2 },
+		{ 10000, 300 },
+		{ 32767, 3 },
+		{ 65535, 3 },
+		{ 65535, 10000 },
+		{ 65535, 65535 },
+	};
+	div_s16_t foo_s, bar_s;
+	div_u16_t foo_u, bar_u;
 	bool pass_fail;
 
-	for(size_t i = 0; i < (sizeof(vals) / sizeof(vals[0])); i++) {
-		div_s16_ref(vals[i].a, vals[i].b, &foo);
-		div_s16(vals[i].a, vals[i].b, &bar);
-		pass_fail = (foo.quot == bar.quot && foo.rem == bar.rem && ((bar.quot * vals[i].b) + bar.rem) == vals[i].a);
+	for(size_t i = 0; i < (sizeof(vals_s) / sizeof(vals_s[0])); i++) {
+		div_s16_ref(vals_s[i].a, vals_s[i].b, &foo_s);
+		div_s16(vals_s[i].a, vals_s[i].b, &bar_s);
+		pass_fail = (foo_s.quot == bar_s.quot && foo_s.rem == bar_s.rem && ((bar_s.quot * vals_s[i].b) + bar_s.rem) == vals_s[i].a);
 		printf(
 			"%d, %d: div_s16_ref = { quot = %d, rem = %d }, div_s16 = { quot = %d, rem = %d } - %s\n",
-			vals[i].a,
-			vals[i].b,
-			foo.quot,
-			foo.rem,
-			bar.quot,
-			bar.rem,
+			vals_s[i].a,
+			vals_s[i].b,
+			foo_s.quot,
+			foo_s.rem,
+			bar_s.quot,
+			bar_s.rem,
+			(pass_fail ? pass_str : fail_str)
+		);
+		count_test_result(pass_fail, result);
+	}
+
+	for(size_t i = 0; i < (sizeof(vals_u) / sizeof(vals_u[0])); i++) {
+		div_u16_ref(vals_u[i].a, vals_u[i].b, &foo_u);
+		div_u16(vals_u[i].a, vals_u[i].b, &bar_u);
+		pass_fail = (foo_u.quot == bar_u.quot && foo_u.rem == bar_u.rem && ((bar_u.quot * vals_u[i].b) + bar_u.rem) == vals_u[i].a);
+		printf(
+			"%u, %u: div_u16_ref = { quot = %u, rem = %u }, div_u16 = { quot = %u, rem = %u } - %s\n",
+			vals_u[i].a,
+			vals_u[i].b,
+			foo_u.quot,
+			foo_u.rem,
+			bar_u.quot,
+			bar_u.rem,
 			(pass_fail ? pass_str : fail_str)
 		);
 		count_test_result(pass_fail, result);
@@ -448,12 +480,17 @@ static void test_div(test_result_t *result) {
 }
 
 static void benchmark_div(void) {
-	static const int16_t val_a = -3000;
-	static const int16_t val_b = 45;
+	static const int16_t val_s_a = -3000;
+	static const int16_t val_s_b = 45;
+	static const uint16_t val_u_a = 47832;
+	static const uint16_t val_u_b = 900;
 	div_s16_t foo;
+	div_u16_t bar;
 
-	benchmark("div_s16_ref", div_s16_ref(val_a, val_b, &foo));
-	benchmark("div_s16", div_s16(val_a, val_b, &foo));
+	benchmark("div_s16_ref", div_s16_ref(val_s_a, val_s_b, &foo));
+	benchmark("div_s16", div_s16(val_s_a, val_s_b, &foo));
+	benchmark("div_u16_ref", div_u16_ref(val_u_a, val_u_b, &bar));
+	benchmark("div_u16", div_u16(val_u_a, val_u_b, &bar));
 }
 
 void main(void) {
@@ -476,6 +513,7 @@ void main(void) {
 	test_pop_count(&results);
 	test_rotate(&results);
 	test_div(&results);
+
 	printf("TOTAL RESULTS: passed = %u, failed = %u\n", results.pass_count, results.fail_count);
 
 	puts(hrule_str);

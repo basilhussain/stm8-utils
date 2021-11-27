@@ -210,3 +210,8 @@ void div_s16_ref(int16_t x, int16_t y, div_s16_t *result) {
 	result->quot = x / y;
 	result->rem = x % y;
 }
+
+void div_u16_ref(uint16_t x, uint16_t y, div_u16_t *result) {
+	result->quot = x / y;
+	result->rem = x % y;
+}
