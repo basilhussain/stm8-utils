@@ -136,7 +136,12 @@
 			<Option target="Library (Medium)" />
 			<Option target="Library (Large)" />
 		</Unit>
-		<Unit filename="utils/div.c">
+		<Unit filename="utils/div_s.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
+		<Unit filename="utils/div_u.c">
 			<Option compilerVar="CC" />
 			<Option target="Library (Medium)" />
 			<Option target="Library (Large)" />
