@@ -52,9 +52,10 @@ typedef struct {
 	uint16_t fail_count;
 } test_result_t;
 
-// Use ANSI terminal escape codes for highlighting pass/fail text.
+// Use ANSI terminal escape codes for highlighting text.
 static const char pass_str[] = "\x1B[1m\x1B[32mPASS\x1B[0m"; // Bold green
 static const char fail_str[] = "\x1B[1m\x1B[31mFAIL\x1B[0m"; // Bold red
+static const char bench_str[] = "\x1B[1m\x1B[33mBENCHMARK\x1B[0m"; // Bold yellow
 static const char hrule_str[] = "----------------------------------------";
 
 #define count_test_result(x, r) \
@@ -71,7 +72,7 @@ static const char hrule_str[] = "----------------------------------------";
 #define benchmark_marker_end() do { PC_ODR &= ~(1 << PC_ODR_ODR5); } while(0)
 #define benchmark(s, o) \
 	do { \
-		printf("\x1B[1m\x1B[33mBENCHMARK\x1B[0m: " s "\n"); \
+		printf("%s: " s "\n", bench_str); \
 		uint16_t n = 10000; \
 		benchmark_marker_start(); \
 		while(n--) (o); \
