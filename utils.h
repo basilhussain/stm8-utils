@@ -2,7 +2,7 @@
  *
  * utils.h - Header for STM8 pseudo-intrinsic bit-manipulation utility functions
  *
- * Copyright (c) 2021 Basil Hussain
+ * Copyright (c) 2022 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,18 @@
 
 #include <stdint.h>
 
+// Short-term fix to force usage of old ABI when compiled with SDCC v4.2.0
+// (or newer). New ABI passes simple arguments (e.g. one or two 8- or 16-bit
+// values) in A/X registers, versus previous where all args are on the stack.
+// Eventually, all assembly code should be changed to use new ABI. May actually
+// offer a performance increase, eliminating code that simply takes arg values
+// and loads them to A/X registers.
+#if defined(__SDCCCALL) && __SDCCCALL != 0
+#define __stack_args __sdcccall(0)
+#else
+#define __stack_args
+#endif
+
 typedef struct {
 	int16_t quot;
 	int16_t rem;
@@ -43,35 +55,35 @@ typedef div_s16_t div_t;
 
 /******************************************************************************/
 
-extern uint8_t swap(const uint8_t value);
-extern uint16_t bswap_16(const uint16_t value);
-extern uint32_t bswap_32(const uint32_t value);
+extern uint8_t swap(const uint8_t value) __naked __stack_args;
+extern uint16_t bswap_16(const uint16_t value) __naked __stack_args;
+extern uint32_t bswap_32(const uint32_t value) __naked __stack_args;
 
-extern uint8_t pop_count_8(uint8_t value);
-extern uint8_t pop_count_16(uint16_t value);
-extern uint8_t pop_count_32(uint32_t value);
+extern uint8_t pop_count_8(uint8_t value) __naked __stack_args;
+extern uint8_t pop_count_16(uint16_t value) __naked __stack_args;
+extern uint8_t pop_count_32(uint32_t value) __naked __stack_args;
 
-extern uint8_t ctz_8(uint8_t value);
-extern uint8_t ctz_16(uint16_t value);
-extern uint8_t ctz_32(uint32_t value);
+extern uint8_t ctz_8(uint8_t value) __naked __stack_args;
+extern uint8_t ctz_16(uint16_t value) __naked __stack_args;
+extern uint8_t ctz_32(uint32_t value) __naked __stack_args;
 
-extern uint8_t clz_8(uint8_t value);
-extern uint8_t clz_16(uint16_t value);
-extern uint8_t clz_32(uint32_t value);
+extern uint8_t clz_8(uint8_t value) __naked __stack_args;
+extern uint8_t clz_16(uint16_t value) __naked __stack_args;
+extern uint8_t clz_32(uint32_t value) __naked __stack_args;
 
-extern uint8_t ffs_8(uint8_t value);
-extern uint8_t ffs_16(uint16_t value);
-extern uint8_t ffs_32(uint32_t value);
+extern uint8_t ffs_8(uint8_t value) __stack_args;
+extern uint8_t ffs_16(uint16_t value) __stack_args;
+extern uint8_t ffs_32(uint32_t value) __stack_args;
 
-extern uint8_t rotate_left_8(uint8_t value, uint8_t count);
-extern uint8_t rotate_right_8(uint8_t value, uint8_t count);
-extern uint16_t rotate_left_16(uint16_t value, uint8_t count);
-extern uint16_t rotate_right_16(uint16_t value, uint8_t count);
-extern uint32_t rotate_left_32(uint32_t value, uint8_t count);
-extern uint32_t rotate_right_32(uint32_t value, uint8_t count);
+extern uint8_t rotate_left_8(uint8_t value, uint8_t count) __naked __stack_args;
+extern uint8_t rotate_right_8(uint8_t value, uint8_t count) __naked __stack_args;
+extern uint16_t rotate_left_16(uint16_t value, uint8_t count) __naked __stack_args;
+extern uint16_t rotate_right_16(uint16_t value, uint8_t count) __naked __stack_args;
+extern uint32_t rotate_left_32(uint32_t value, uint8_t count) __naked __stack_args;
+extern uint32_t rotate_right_32(uint32_t value, uint8_t count) __naked __stack_args;
 
-extern void div_s16(int16_t x, int16_t y, div_s16_t *result);
-extern void div_u16(uint16_t x, uint16_t y, div_u16_t *result);
+extern void div_s16(int16_t x, int16_t y, div_s16_t *result) __naked __stack_args;
+extern void div_u16(uint16_t x, uint16_t y, div_u16_t *result) __naked __stack_args;
 
 /******************************************************************************/
 

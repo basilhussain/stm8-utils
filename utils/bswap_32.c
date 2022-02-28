@@ -2,7 +2,7 @@
  *
  * bswap_32.c - 32-bit byte-swap implementation
  *
- * Copyright (c) 2020 Basil Hussain
+ * Copyright (c) 2022 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 #include "common.h"
 #include "../utils.h"
 
-uint32_t bswap_32(const uint32_t value) __naked {
+uint32_t bswap_32(const uint32_t value) __naked __stack_args {
 	(void)value;
 
 	/*

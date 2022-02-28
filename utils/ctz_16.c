@@ -2,7 +2,7 @@
  *
  * ctz_16.c - 16-bit count trailing zeroes implementation
  *
- * Copyright (c) 2020 Basil Hussain
+ * Copyright (c) 2022 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 #include "common.h"
 #include "../utils.h"
 
-uint8_t ctz_16(uint16_t value) __naked {
+uint8_t ctz_16(uint16_t value) __naked __stack_args {
 	(void)value;
 
 #if defined(CTZ_LUT_LARGE)

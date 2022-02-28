@@ -2,7 +2,7 @@
  *
  * div_s.c - Simultaneous quotient and remainder signed division implementation
  *
- * Copyright (c) 2021 Basil Hussain
+ * Copyright (c) 2022 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@
 // TODO: perhaps make return value of function carry value from DIVW, so
 // divide-by-zero can be ascertained.
 
-void div_s16(int16_t x, int16_t y, div_s16_t *result) __naked {
+void div_s16(int16_t x, int16_t y, div_s16_t *result) __naked __stack_args {
 	(void)x;
 	(void)y;
 	(void)result;

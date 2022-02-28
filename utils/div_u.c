@@ -3,7 +3,7 @@
  * div_u.c - Simultaneous quotient and remainder unsigned division
  *           implementation
  *
- * Copyright (c) 2021 Basil Hussain
+ * Copyright (c) 2022 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@
 // TODO: perhaps make return value of function carry value from DIVW, so
 // divide-by-zero can be ascertained.
 
-void div_u16(uint16_t x, uint16_t y, div_u16_t *result) __naked {
+void div_u16(uint16_t x, uint16_t y, div_u16_t *result) __naked __stack_args {
 	(void)x;
 	(void)y;
 	(void)result;

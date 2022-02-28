@@ -2,7 +2,7 @@
  *
  * rot_right_8.c - 8-bit right-rotate implementation
  *
- * Copyright (c) 2020 Basil Hussain
+ * Copyright (c) 2022 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 #include "common.h"
 #include "../utils.h"
 
-uint8_t rotate_right_8(uint8_t value, uint8_t count) __naked {
+uint8_t rotate_right_8(uint8_t value, uint8_t count) __naked __stack_args {
 	(void)value;
 	(void)count;
 
