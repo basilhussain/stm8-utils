@@ -2,7 +2,7 @@
  *
  * common.c - Header for common look-up tables
  *
- * Copyright (c) 2020 Basil Hussain
+ * Copyright (c) 2022 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,8 @@
 
 #ifndef COMMON_H_
 #define COMMON_H_
+
+#include <stdint.h>
 
 #ifdef __SDCC_MODEL_LARGE
 #define ASM_ARGS_SP_OFFSET 4

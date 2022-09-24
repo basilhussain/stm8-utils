@@ -3,7 +3,7 @@
  * main.c - Test and benchmarking code for STM8 pseudo-intrinsic bit-
  *          manipulation utility function library
  *
- * Copyright (c) 2021 Basil Hussain
+ * Copyright (c) 2022 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -68,11 +68,12 @@ static const char hrule_str[] = "----------------------------------------";
 	} while(0)
 
 
+#define benchmark_print_header(s) do { printf("%s: " s "\n", bench_str); } while(0)
 #define benchmark_marker_start() do { PC_ODR |= (1 << PC_ODR_ODR5); } while(0)
 #define benchmark_marker_end() do { PC_ODR &= ~(1 << PC_ODR_ODR5); } while(0)
 #define benchmark(s, o) \
 	do { \
-		printf("%s: " s "\n", bench_str); \
+		benchmark_print_header(s); \
 		uint16_t n = 10000; \
 		benchmark_marker_start(); \
 		while(n--) (o); \
@@ -494,6 +495,81 @@ static void benchmark_div(void) {
 	benchmark("div_u16", div_u16(val_u_a, val_u_b, &bar));
 }
 
+static void test_strctcmp(test_result_t *result) {
+	static const struct {
+		const char *a;
+		const char *b;
+		bool eq;
+	} vals[] = {
+		{ "abc", "abc", true },
+		{ "abc", "xyz", false },
+		{ "abc", "abcdef", false },
+		{ "abcdef", "abc", false },
+		{ "", "", true },
+		{ NULL, NULL, false },
+		{ "abc", NULL, false },
+		{ NULL, "abc", false },
+	};
+	int cmp;
+	bool pass_fail;
+
+	for(size_t i = 0; i < (sizeof(vals) / sizeof(vals[0])); i++) {
+		cmp = strctcmp(vals[i].a, vals[i].b);
+		pass_fail = ((cmp == 0) == vals[i].eq);
+		printf(
+			"strctcmp: a = \"%s\", b = \"%s\", ret = %d, equal = %u, expected = %u - %s\n",
+			(vals[i].a != NULL ? vals[i].a : "[NULL]"),
+			(vals[i].b != NULL ? vals[i].b : "[NULL]"),
+			cmp,
+			(cmp == 0),
+			vals[i].eq,
+			(pass_fail ? pass_str : fail_str)
+		);
+		count_test_result(pass_fail, result);
+	}
+}
+
+static void benchmark_strctcmp(void) {
+	static const char *str_a = "abc";
+	static const char *str_b = "xyz";
+	static const char *str_c = "abcdef";
+
+	// These aren't really benchmarks in terms of comparing speed of execution
+	// between two different implementations, but rather a means of checking
+	// that comparison of two equal and two non-equal strings take the same
+	// number of execution cycles.
+
+	benchmark_print_header("strctcmp (A-A)");
+	benchmark_marker_start();
+	strctcmp(str_a, str_a);
+	benchmark_marker_end();
+
+	benchmark_print_header("strctcmp (A-B)");
+	benchmark_marker_start();
+	strctcmp(str_a, str_b);
+	benchmark_marker_end();
+
+	benchmark_print_header("strctcmp (A-C)");
+	benchmark_marker_start();
+	strctcmp(str_a, str_c);
+	benchmark_marker_end();
+
+	benchmark_print_header("strctcmp (C-C)");
+	benchmark_marker_start();
+	strctcmp(str_c, str_c);
+	benchmark_marker_end();
+
+	benchmark_print_header("strctcmp (C-A)");
+	benchmark_marker_start();
+	strctcmp(str_c, str_a);
+	benchmark_marker_end();
+
+	benchmark_print_header("strctcmp (C-B)");
+	benchmark_marker_start();
+	strctcmp(str_c, str_b);
+	benchmark_marker_end();
+}
+
 void main(void) {
 	test_result_t results = { 0, 0 };
 
@@ -514,6 +590,7 @@ void main(void) {
 	test_pop_count(&results);
 	test_rotate(&results);
 	test_div(&results);
+	test_strctcmp(&results);
 
 	printf("TOTAL RESULTS: passed = %u, failed = %u\n", results.pass_count, results.fail_count);
 
@@ -524,6 +601,7 @@ void main(void) {
 	benchmark_ctz_clz_ffs();
 	benchmark_rotate();
 	benchmark_div();
+	benchmark_strctcmp();
 
 	puts(hrule_str);
 
@@ -533,5 +611,9 @@ void main(void) {
 	puts(hrule_str);
 	*/
 
-	while(1);
+	if(ucsim_if_detect()) {
+		ucsim_if_stop();
+	} else {
+		while(1);
+	}
 }

@@ -85,6 +85,8 @@ extern uint32_t rotate_right_32(uint32_t value, uint8_t count) __naked __stack_a
 extern void div_s16(int16_t x, int16_t y, div_s16_t *result) __naked __stack_args;
 extern void div_u16(uint16_t x, uint16_t y, div_u16_t *result) __naked __stack_args;
 
+extern int strctcmp(const char *s1, const char *s2) __naked __stack_args;
+
 /******************************************************************************/
 
 #define parity_even_8(x) (pop_count_8(x) & (uint8_t)0x01)

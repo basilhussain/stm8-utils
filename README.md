@@ -2,7 +2,7 @@
 
 This is a library for the STM8 microcontroller and [SDCC](http://sdcc.sourceforge.net/) compiler providing an assortment of pseudo-intrinsic functions for bit manipulation, counting, inspection, and calculation. All functions have been written in hand-optimised assembly code for the fastest possible execution speed.
 
-Functions are provided for nibble/byte swapping, population count (i.e. count of 1 bits), counting of trailing/leading zero bits, find-first-set (i.e. index of first 1-bit), bit rotation, parity, and simultaneous division quotient/remainder calculation.
+Functions are provided for nibble/byte swapping, population count (i.e. count of 1 bits), counting of trailing/leading zero bits, find-first-set (i.e. index of first 1-bit), bit rotation, parity, simultaneous division quotient/remainder calculation, and constant-time string comparison.
 
 In addition to the library functions, a test and benchmark program (in C) is also included that contains reference implementations for each library function, used to verify proper operation of the library functions and to benchmark against.
 
@@ -155,6 +155,10 @@ Calculates simultaneously both the quotient and the remainder of the *signed* in
 
 Calculates simultaneously both the quotient and the remainder of the *unsigned* integer division of dividend `x` by divisor `y`. The result is placed in the `div_u16_t` structure pointed to by `result`; the structure contains two `uint16_t` members named `quot` and `rem`. Be warned that when dividing by zero, the resulting values will be indeterminate.
 
+### `int strctcmp(const char *s1, const char *s2)`
+
+Performs a comparison between two null-terminated byte strings in *constant-time*. That is, the comparison operation will take the same number of execution cycles regardless of whether the strings are equal or not. Returns zero if `s1` and `s2` compare equal, or a non-zero value if not. A non-zero value is also returned where either `s1` or `s2` are null pointers. Note that this function does not compare lexicographically (like `strcmp`) - the return value cannot be used to determine lexicographical order (i.e. whether `s1` is ordered before or after `s2`).
+
 ## Function Remarks
 
 For the `div_s16` and `div_u16` functions, an output argument is used to return the result because SDCC does not (at time of writing) support passing structs by value as function arguments or returning them from functions. This is the reason why standard functions `div`, `ldiv`, etc. are not included in SDCC's standard library.
@@ -222,6 +226,7 @@ To benchmark the library functions, the execution speed of each was compared wit
 | rotate_right_32 |   3,180,018 |   2,910,017 |   92% |
 | div_s16         |   1,460,018 |     970,022 |   66% |
 | div_u16         |     860,021 |     710,018 |   83% |
+| strctcmp        |         N/A |         N/A |   N/A |
 
 The benchmark was run using the [μCsim](http://mazsola.iit.uni-miskolc.hu/~drdani/embedded/ucsim/) microcontroller simulator included with SDCC, and measurements were obtained using the timer commands of the simulator.
 
@@ -230,6 +235,7 @@ Other notes:
 * The count of cycles consumed shown here includes the loop iteration, but for the purposes of comparison, because it is a common overhead and counts equally against both implementations, this can be ignored.
 * All C code was compiled using SDCC's default 'balanced' optimisation level (i.e. with neither `--opt-code-speed` or `--opt-code-size`).
 * Where library ASM functions have multiple alternate implementations, the fastest (typically table-look-up-based) was used.
+* Benchmark figures for `strctcmp` are not applicable, as in that case the benchmark is used not to compare execution speed, but instead to determine that comparisons of equal and non-equal strings execute in the same number of cycles.
 
 It is also worth making some remarks regarding the apparent slim improvement of the left- and right-rotation functions. The benchmark result is slightly unrepresentative here due to the choice of input value used in the benchmark code. Different input values would produce different results, because the execution speed of the library function scales linearly with rotation count (whereas the reference C implementation is effectively constant-time). This can be clearly seen in the graph below.
 

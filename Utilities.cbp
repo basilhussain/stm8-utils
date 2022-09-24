@@ -206,6 +206,11 @@
 			<Option target="Library (Medium)" />
 			<Option target="Library (Large)" />
 		</Unit>
+		<Unit filename="utils/strctcmp.c">
+			<Option compilerVar="CC" />
+			<Option target="Library (Medium)" />
+			<Option target="Library (Large)" />
+		</Unit>
 		<Unit filename="utils/swap.c">
 			<Option compilerVar="CC" />
 			<Option target="Library (Medium)" />
