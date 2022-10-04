@@ -21,7 +21,6 @@ obj/*
 *.layout
 
 # Other stuff
-ansicon/*
 *.zip
 misc/*
 tools/*
