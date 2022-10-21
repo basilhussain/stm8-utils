@@ -2,7 +2,7 @@
  *
  * ref.c - Reference implementations
  *
- * Copyright (c) 2021 Basil Hussain
+ * Copyright (c) 2022 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -212,6 +212,11 @@ void div_s16_ref(int16_t x, int16_t y, div_s16_t *result) {
 }
 
 void div_u16_ref(uint16_t x, uint16_t y, div_u16_t *result) {
+	result->quot = x / y;
+	result->rem = x % y;
+}
+
+void div_u32_ref(uint32_t x, uint32_t y, div_u32_t *result) {
 	result->quot = x / y;
 	result->rem = x % y;
 }

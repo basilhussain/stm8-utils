@@ -51,6 +51,11 @@ typedef struct {
 	uint16_t rem;
 } div_u16_t;
 
+typedef struct {
+	uint32_t quot;
+	uint32_t rem;
+} div_u32_t;
+
 typedef div_s16_t div_t;
 
 /******************************************************************************/
@@ -84,6 +89,7 @@ extern uint32_t rotate_right_32(uint32_t value, uint8_t count) __naked __stack_a
 
 extern void div_s16(int16_t x, int16_t y, div_s16_t *result) __naked __stack_args;
 extern void div_u16(uint16_t x, uint16_t y, div_u16_t *result) __naked __stack_args;
+extern void div_u32(uint32_t x, uint32_t y, div_u32_t *result) __naked __stack_args;
 
 extern int strctcmp(const char *s1, const char *s2) __naked __stack_args;
 

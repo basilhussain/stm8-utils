@@ -411,7 +411,7 @@ static void test_div(test_result_t *result) {
 	static const struct {
 		int16_t a;
 		int16_t b;
-	} vals_s[] = {
+	} vals_s16[] = {
 		{ 0, 1 },
 		{ 1, 1 },
 		{ 1, 2 },
@@ -431,7 +431,7 @@ static void test_div(test_result_t *result) {
 	static const struct {
 		uint16_t a;
 		uint16_t b;
-	} vals_u[] = {
+	} vals_u16[] = {
 		{ 0, 1 },
 		{ 1, 1 },
 		{ 1, 2 },
@@ -442,39 +442,75 @@ static void test_div(test_result_t *result) {
 		{ 65535, 10000 },
 		{ 65535, 65535 },
 	};
-	div_s16_t foo_s, bar_s;
-	div_u16_t foo_u, bar_u;
+	static const struct {
+		uint32_t a;
+		uint32_t b;
+	} vals_u32[] = {
+		{ 0UL, 1UL },
+		{ 1UL, 1UL },
+		{ 1UL, 2UL },
+		{ 1000UL, 2UL },
+		{ 10000UL, 300UL },
+		{ 1000000UL, 2000UL },
+		{ 1000000UL, 6969UL },
+		{ 2147483647UL, 1UL },
+		{ 4294967295UL, 1UL },
+		{ 2147483647UL, 100000UL },
+		{ 4294967295UL, 100000UL },
+		{ 100000UL, 4294967295UL },
+		{ 4294967295UL, 4294967295UL },
+	};
+	div_s16_t foo_s16, bar_s16;
+	div_u16_t foo_u16, bar_u16;
+	div_u32_t foo_u32, bar_u32;
 	bool pass_fail;
 
-	for(size_t i = 0; i < (sizeof(vals_s) / sizeof(vals_s[0])); i++) {
-		div_s16_ref(vals_s[i].a, vals_s[i].b, &foo_s);
-		div_s16(vals_s[i].a, vals_s[i].b, &bar_s);
-		pass_fail = (foo_s.quot == bar_s.quot && foo_s.rem == bar_s.rem && ((bar_s.quot * vals_s[i].b) + bar_s.rem) == vals_s[i].a);
+	for(size_t i = 0; i < (sizeof(vals_s16) / sizeof(vals_s16[0])); i++) {
+		div_s16_ref(vals_s16[i].a, vals_s16[i].b, &foo_s16);
+		div_s16(vals_s16[i].a, vals_s16[i].b, &bar_s16);
+		pass_fail = (foo_s16.quot == bar_s16.quot && foo_s16.rem == bar_s16.rem && ((bar_s16.quot * vals_s16[i].b) + bar_s16.rem) == vals_s16[i].a);
 		printf(
 			"%d, %d: div_s16_ref = { quot = %d, rem = %d }, div_s16 = { quot = %d, rem = %d } - %s\n",
-			vals_s[i].a,
-			vals_s[i].b,
-			foo_s.quot,
-			foo_s.rem,
-			bar_s.quot,
-			bar_s.rem,
+			vals_s16[i].a,
+			vals_s16[i].b,
+			foo_s16.quot,
+			foo_s16.rem,
+			bar_s16.quot,
+			bar_s16.rem,
 			(pass_fail ? pass_str : fail_str)
 		);
 		count_test_result(pass_fail, result);
 	}
 
-	for(size_t i = 0; i < (sizeof(vals_u) / sizeof(vals_u[0])); i++) {
-		div_u16_ref(vals_u[i].a, vals_u[i].b, &foo_u);
-		div_u16(vals_u[i].a, vals_u[i].b, &bar_u);
-		pass_fail = (foo_u.quot == bar_u.quot && foo_u.rem == bar_u.rem && ((bar_u.quot * vals_u[i].b) + bar_u.rem) == vals_u[i].a);
+	for(size_t i = 0; i < (sizeof(vals_u16) / sizeof(vals_u16[0])); i++) {
+		div_u16_ref(vals_u16[i].a, vals_u16[i].b, &foo_u16);
+		div_u16(vals_u16[i].a, vals_u16[i].b, &bar_u16);
+		pass_fail = (foo_u16.quot == bar_u16.quot && foo_u16.rem == bar_u16.rem && ((bar_u16.quot * vals_u16[i].b) + bar_u16.rem) == vals_u16[i].a);
 		printf(
 			"%u, %u: div_u16_ref = { quot = %u, rem = %u }, div_u16 = { quot = %u, rem = %u } - %s\n",
-			vals_u[i].a,
-			vals_u[i].b,
-			foo_u.quot,
-			foo_u.rem,
-			bar_u.quot,
-			bar_u.rem,
+			vals_u16[i].a,
+			vals_u16[i].b,
+			foo_u16.quot,
+			foo_u16.rem,
+			bar_u16.quot,
+			bar_u16.rem,
+			(pass_fail ? pass_str : fail_str)
+		);
+		count_test_result(pass_fail, result);
+	}
+
+	for(size_t i = 0; i < (sizeof(vals_u32) / sizeof(vals_u32[0])); i++) {
+		div_u32_ref(vals_u32[i].a, vals_u32[i].b, &foo_u32);
+		div_u32(vals_u32[i].a, vals_u32[i].b, &bar_u32);
+		pass_fail = (foo_u32.quot == bar_u32.quot && foo_u32.rem == bar_u32.rem && ((bar_u32.quot * vals_u32[i].b) + bar_u32.rem) == vals_u32[i].a);
+		printf(
+			"%lu, %lu: div_u32_ref = { quot = %lu, rem = %lu }, div_u32 = { quot = %lu, rem = %lu } - %s\n",
+			vals_u32[i].a,
+			vals_u32[i].b,
+			foo_u32.quot,
+			foo_u32.rem,
+			bar_u32.quot,
+			bar_u32.rem,
 			(pass_fail ? pass_str : fail_str)
 		);
 		count_test_result(pass_fail, result);
@@ -482,17 +518,22 @@ static void test_div(test_result_t *result) {
 }
 
 static void benchmark_div(void) {
-	static const int16_t val_s_a = -3000;
-	static const int16_t val_s_b = 45;
-	static const uint16_t val_u_a = 47832;
-	static const uint16_t val_u_b = 900;
-	div_s16_t foo;
-	div_u16_t bar;
+	static const int16_t val_s16_a = -3000;
+	static const int16_t val_s16_b = 45;
+	static const uint16_t val_u16_a = 47832;
+	static const uint16_t val_u16_b = 900;
+	static const uint32_t val_u32_a = 1387974UL;
+	static const uint32_t val_u32_b = 86491UL;
+	div_s16_t result_s16;
+	div_u16_t result_u16;
+	div_u32_t result_u32;
 
-	benchmark("div_s16_ref", div_s16_ref(val_s_a, val_s_b, &foo));
-	benchmark("div_s16", div_s16(val_s_a, val_s_b, &foo));
-	benchmark("div_u16_ref", div_u16_ref(val_u_a, val_u_b, &bar));
-	benchmark("div_u16", div_u16(val_u_a, val_u_b, &bar));
+	benchmark("div_s16_ref", div_s16_ref(val_s16_a, val_s16_b, &result_s16));
+	benchmark("div_s16", div_s16(val_s16_a, val_s16_b, &result_s16));
+	benchmark("div_u16_ref", div_u16_ref(val_u16_a, val_u16_b, &result_u16));
+	benchmark("div_u16", div_u16(val_u16_a, val_u16_b, &result_u16));
+	benchmark("div_u32_ref", div_u32_ref(val_u32_a, val_u32_b, &result_u32));
+	benchmark("div_u32", div_u32(val_u32_a, val_u32_b, &result_u32));
 }
 
 static void test_strctcmp(test_result_t *result) {

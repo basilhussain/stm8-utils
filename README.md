@@ -155,13 +155,17 @@ Calculates simultaneously both the quotient and the remainder of the *signed* in
 
 Calculates simultaneously both the quotient and the remainder of the *unsigned* integer division of dividend `x` by divisor `y`. The result is placed in the `div_u16_t` structure pointed to by `result`; the structure contains two `uint16_t` members named `quot` and `rem`. Be warned that when dividing by zero, the resulting values will be indeterminate.
 
+### `void div_u32(uint32_t x, uint32_t y, div_u32_t *result)`
+
+Calculates simultaneously both the quotient and the remainder of the *unsigned* integer division of dividend `x` by divisor `y`. The result is placed in the `div_u32_t` structure pointed to by `result`; the structure contains two `uint32_t` members named `quot` and `rem`. Be warned that when dividing by zero, the resulting values will be indeterminate.
+
 ### `int strctcmp(const char *s1, const char *s2)`
 
 Performs a comparison between two null-terminated byte strings in *constant-time*. That is, the comparison operation will take the same number of execution cycles regardless of whether the strings are equal or not. Returns zero if `s1` and `s2` compare equal, or a non-zero value if not. A non-zero value is also returned where either `s1` or `s2` are null pointers. Note that this function does not compare lexicographically (like `strcmp`) - the return value cannot be used to determine lexicographical order (i.e. whether `s1` is ordered before or after `s2`).
 
 ## Function Remarks
 
-For the `div_s16` and `div_u16` functions, an output argument is used to return the result because SDCC does not (at time of writing) support passing structs by value as function arguments or returning them from functions. This is the reason why standard functions `div`, `ldiv`, etc. are not included in SDCC's standard library.
+For the `div_s16`, `div_u16`, and `div_u32` functions, an output argument is used to return the result because SDCC does not (at time of writing) support passing structs by value as function arguments or returning them from functions. This is the reason why standard functions `div`, `ldiv`, etc. are not included in SDCC's standard library.
 
 ## Aliases
 
@@ -190,10 +194,12 @@ For convenience, the following aliases are provided (via macro definitions) to s
 void main(void) {
     uint32_t foo;
     uint8_t bar;
+    div_u32_t baz;
     foo = 0xAABBCCDD;
     foo = bswap_32(foo); // returns 0xDDCCBBAA
     bar = popcount_32(foo); // returns 20
     bar = rotate_right_8(bar, 3); // returns 130
+    div_u32(4539778UL, 100000UL, &baz); // outputs quotient 45 and remainder 39778 to baz
 }
 ```
 
@@ -226,6 +232,7 @@ To benchmark the library functions, the execution speed of each was compared wit
 | rotate_right_32 |   3,180,018 |   2,910,017 |   92% |
 | div_s16         |   1,460,018 |     970,022 |   66% |
 | div_u16         |     860,021 |     710,018 |   83% |
+| div_u32         |  22,220,017 |  11,940,018 |   54% |
 | strctcmp        |         N/A |         N/A |   N/A |
 
 The benchmark was run using the [μCsim](http://mazsola.iit.uni-miskolc.hu/~drdani/embedded/ucsim/) microcontroller simulator included with SDCC, and measurements were obtained using the timer commands of the simulator.
@@ -243,7 +250,7 @@ It is also worth making some remarks regarding the apparent slim improvement of 
 
 It can be argued that non-linearity of execution speed is a desirable trait for certain use cases (e.g. cryptography), but due to the nature of the target platform of this library (8-bit microcontrollers), such things are not a concern.
 
-Another area also worth commenting on is regarding the benchmarks of `div_s16` and `div_u16`. The μCsim simulator does not accurately simulate the STM8's `DIVW` instruction (as used by those functions) in terms of number of cycles consumed. The *STM8 CPU Programming Manual (PM0044)* documents that `DIVW` can take between 2 and 17 cycles depending on the values operated on, whereas μCsim (at time of writing, as of SDCC v4.1.0) always [counts it as taking 11 cycles](https://sourceforge.net/p/sdcc/code/HEAD/tree/tags/sdcc-4.1.0/sdcc/sim/ucsim/stm8.src/inst.cc#l706) regardless of operand values. Therefore, the benchmark results for `div_s16` and `div_u16` will not accurately reflect performance on real hardware.
+Another area also worth commenting on is regarding the benchmarks of `div_s16` and `div_u16`. The μCsim simulator does not accurately simulate the STM8's `DIVW` instruction (as used by those functions) in terms of number of cycles consumed. The *STM8 CPU Programming Manual (PM0044)* documents that `DIVW` can take between 2 and 17 cycles depending on the values operated on, whereas μCsim (at time of writing, as of SDCC v4.1.0) always [counts it as taking 11 cycles](https://sourceforge.net/p/sdcc/code/HEAD/tree/tags/sdcc-4.1.0/sdcc/sim/ucsim/stm8.src/inst.cc#l706) regardless of operand values. Therefore, the benchmark results for `div_s16` and `div_u16` will not accurately reflect performance on real hardware. The `div_u32` function uses a binary long division algorithm, so is not affected.
 
 # Code Size
 
