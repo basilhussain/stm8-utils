@@ -36,18 +36,16 @@ uint8_t rotate_right_8(uint8_t value, uint8_t count) __naked __stack_args {
 	// a = 0xAA
 
 	__asm
-		; Load count arg into X reg, first masking it to ensure it wraps round
-		; if >= 8.
+		; First mask count arg to ensure it wraps round if >= 8.
 		ld a, (ASM_ARGS_SP_OFFSET+1, sp)
 		and a, #0x07
-		clrw x
-		ld xl, a
+		ld (ASM_ARGS_SP_OFFSET+1, sp), a
 
 		; Load value arg into A register.
 		ld a, (ASM_ARGS_SP_OFFSET+0, sp)
 
 		; If the count is zero, quit straight away.
-		tnzw x
+		tnz (ASM_ARGS_SP_OFFSET+1, sp)
 		jreq 0003$
 
 	0001$:
@@ -61,7 +59,7 @@ uint8_t rotate_right_8(uint8_t value, uint8_t count) __naked __stack_args {
 
 	0002$:
 		; Decrement count and loop around if it is not zero.
-		decw x
+		dec (ASM_ARGS_SP_OFFSET+1, sp)
 		jrne 0001$
 
 	0003$:
