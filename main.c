@@ -674,25 +674,25 @@ void main(void) {
 
 	puts(hrule_str);
 
-	// test_swap(&results);
-	// test_reflect(&results);
-	// test_ctz_clz_ffs(&results);
-	// test_pop_count(&results);
-	// test_rotate(&results);
-	// test_div(&results);
-	// test_strctcmp(&results);
+	test_swap(&results);
+	test_reflect(&results);
+	test_ctz_clz_ffs(&results);
+	test_pop_count(&results);
+	test_rotate(&results);
+	test_div(&results);
+	test_strctcmp(&results);
 
 	printf("TOTAL RESULTS: passed = %u, failed = %u\n", results.pass_count, results.fail_count);
 
 	puts(hrule_str);
 
-	// benchmark_swap();
+	benchmark_swap();
 	benchmark_reflect();
-	// benchmark_pop_count();
-	// benchmark_ctz_clz_ffs();
-	// benchmark_rotate();
-	// benchmark_div();
-	// benchmark_strctcmp();
+	benchmark_pop_count();
+	benchmark_ctz_clz_ffs();
+	benchmark_rotate();
+	benchmark_div();
+	benchmark_strctcmp();
 
 	puts(hrule_str);
 
