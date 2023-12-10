@@ -225,8 +225,8 @@ To benchmark the library functions, the execution speed of each was compared wit
 | bswap_16        |     430,011 |     330,011 |   77% |
 | bswap_32        |   1,300,018 |     410,017 |   32% |
 | reflect_8       |   1,480,008 |     390,008 |   26% |
-| reflect_16      |   4,020,014 |     900,014 |   22% |
-| reflect_32      |  14,660,014 |   2,890,014 |   20% |
+| reflect_16      |   3,210,014 |     900,014 |   28% |
+| reflect_32      |  12,760,014 |   2,890,014 |   23% |
 | pop_count_8     |     790,011 |     300,011 |   38% |
 | pop_count_16    |   1,770,011 |     410,010 |   23% |
 | pop_count_32    |   6,160,018 |     570,018 |    9% |
