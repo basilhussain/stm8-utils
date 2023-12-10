@@ -3,7 +3,7 @@
  * main.c - Test and benchmarking code for STM8 pseudo-intrinsic bit-
  *          manipulation utility function library
  *
- * Copyright (c) 2022 Basil Hussain
+ * Copyright (c) 2023 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -128,6 +128,54 @@ static void benchmark_swap(void) {
 
 	benchmark("bswap_32_ref", bswap_32_ref(val_32));
 	benchmark("bswap_32", bswap_32(val_32));
+}
+
+static void test_reflect(test_result_t *result) {
+	static const uint8_t vals_8[] = {
+		0xA5, 0x33, 0x88, 0x00, 0xFF,
+	};
+	static const uint16_t vals_16[] = {
+		0xAA55, 0x3333, 0x8888, 0x0000, 0xFFFF,
+	};
+	static const uint32_t vals_32[] = {
+		0xAAAA5555UL, 0x33333333UL, 0x88888888UL, 0x00000000UL, 0xFFFFFFFFUL,
+	};
+
+	for(size_t i = 0; i < (sizeof(vals_8) / sizeof(vals_8[0])); i++) {
+		uint8_t foo = reflect_8_ref(vals_8[i]);
+		uint8_t bar = reflect_8(vals_8[i]);
+		printf("0x%02X: reflect_8_ref = 0x%02X, swap = 0x%02X - %s\n", vals_8[i], foo, bar, (foo == bar ? pass_str : fail_str));
+		count_test_result(foo == bar, result);
+	}
+
+	for(size_t i = 0; i < (sizeof(vals_16) / sizeof(vals_16[0])); i++) {
+		uint16_t foo = reflect_16_ref(vals_16[i]);
+		uint16_t bar = reflect_16(vals_16[i]);
+		printf("0x%04X: reflect_16_ref = 0x%04X, reflect_16 = 0x%04X - %s\n", vals_16[i], foo, bar, (foo == bar ? pass_str : fail_str));
+		count_test_result(foo == bar, result);
+	}
+
+	for(size_t i = 0; i < (sizeof(vals_32) / sizeof(vals_32[0])); i++) {
+		uint32_t foo = reflect_32_ref(vals_32[i]);
+		uint32_t bar = reflect_32(vals_32[i]);
+		printf("0x%08lX: reflect_32_ref = 0x%08lX, reflect_32 = 0x%08lX - %s\n", vals_32[i], foo, bar, (foo == bar ? pass_str : fail_str));
+		count_test_result(foo == bar, result);
+	}
+}
+
+static void benchmark_reflect(void) {
+	static const uint8_t val_8 = 0xA5;
+	static const uint16_t val_16 = 0xAA55;
+	static const uint32_t val_32 = 0xAAAA5555UL;
+
+	benchmark("reflect_8_ref", reflect_8_ref(val_8));
+	benchmark("reflect_8", reflect_8(val_8));
+
+	benchmark("reflect_16_ref", reflect_16_ref(val_16));
+	benchmark("reflect_16", reflect_16(val_16));
+
+	benchmark("reflect_32_ref", reflect_32_ref(val_32));
+	benchmark("reflect_32", reflect_32(val_32));
 }
 
 static void test_pop_count(test_result_t *result) {
@@ -626,23 +674,25 @@ void main(void) {
 
 	puts(hrule_str);
 
-	test_swap(&results);
-	test_ctz_clz_ffs(&results);
-	test_pop_count(&results);
-	test_rotate(&results);
-	test_div(&results);
-	test_strctcmp(&results);
+	// test_swap(&results);
+	// test_reflect(&results);
+	// test_ctz_clz_ffs(&results);
+	// test_pop_count(&results);
+	// test_rotate(&results);
+	// test_div(&results);
+	// test_strctcmp(&results);
 
 	printf("TOTAL RESULTS: passed = %u, failed = %u\n", results.pass_count, results.fail_count);
 
 	puts(hrule_str);
 
-	benchmark_swap();
-	benchmark_pop_count();
-	benchmark_ctz_clz_ffs();
-	benchmark_rotate();
-	benchmark_div();
-	benchmark_strctcmp();
+	// benchmark_swap();
+	benchmark_reflect();
+	// benchmark_pop_count();
+	// benchmark_ctz_clz_ffs();
+	// benchmark_rotate();
+	// benchmark_div();
+	// benchmark_strctcmp();
 
 	puts(hrule_str);
 

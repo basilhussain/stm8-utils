@@ -2,7 +2,7 @@
 
 This is a library for the STM8 microcontroller and [SDCC](http://sdcc.sourceforge.net/) compiler providing an assortment of pseudo-intrinsic functions for bit manipulation, counting, inspection, and calculation. All functions have been written in hand-optimised assembly code for the fastest possible execution speed.
 
-Functions are provided for nibble/byte swapping, population count (i.e. count of 1 bits), counting of trailing/leading zero bits, find-first-set (i.e. index of first 1-bit), bit rotation, parity, simultaneous division quotient/remainder calculation, and constant-time string comparison.
+Functions are provided for nibble/byte swapping, bit reversing/reflection, population count (i.e. count of 1 bits), counting of trailing/leading zero bits, find-first-set (i.e. index of first 1-bit), bit rotation, parity, simultaneous division quotient/remainder calculation, and constant-time string comparison.
 
 In addition to the library functions, a test and benchmark program (in C) is also included that contains reference implementations for each library function, used to verify proper operation of the library functions and to benchmark against.
 
@@ -50,6 +50,18 @@ Returns `value` with the order of its bytes reversed. For example, `0xAABB` beco
 ### `uint32_t bswap_32(const uint32_t value)`
 
 Returns `value` with the order of its bytes reversed. For example, `0xAABBCCDD` becomes `0xDDCCBBAA`.
+
+### `uint8_t reflect_8(uint8_t value)`
+
+Returns `value` with the order of its bits reversed (i.e. reflected). For example, `0x33` (`0b00110011`) becomes `0xCC` (`0b11001100`).
+
+### `uint16_t reflect_16(uint16_t value)`
+
+Returns `value` with the order of its bits reversed (i.e. reflected).
+
+### `uint32_t reflect_32(uint32_t value)`
+
+Returns `value` with the order of its bits reversed (i.e. reflected).
 
 ### `uint8_t pop_count_8(uint8_t value)`
 
@@ -212,6 +224,9 @@ To benchmark the library functions, the execution speed of each was compared wit
 | swap            |     470,011 |     270,011 |   57% |
 | bswap_16        |     430,011 |     330,011 |   77% |
 | bswap_32        |   1,300,018 |     410,017 |   32% |
+| reflect_8       |   1,480,008 |     390,008 |   26% |
+| reflect_16      |   4,020,014 |     900,014 |   22% |
+| reflect_32      |  14,660,014 |   2,890,014 |   20% |
 | pop_count_8     |     790,011 |     300,011 |   38% |
 | pop_count_16    |   1,770,011 |     410,010 |   23% |
 | pop_count_32    |   6,160,018 |     570,018 |    9% |
@@ -281,6 +296,13 @@ The implementation used for functions that count leading zeroes is controlled by
 
 * When `CLZ_LUT_LARGE` is defined, a 128-byte look-up table is used. This is the fastest method, and the default for this library.
 * If not defined, an iterative method is used, which has a smaller size, but is slower.
+
+## Bit Reflection Functions
+
+The implementation used for functions that reverse/reflect bits is controlled by the following definition:
+
+* When `REFLECT_UNROLLED` is defined, the loops of the iterative algorithms are unrolled. This is the fastest method, and the default for this library.
+* If not defined, iterative loops are retained, which has a smaller size, but is slower.
 
 # Test Program
 

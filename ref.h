@@ -2,7 +2,7 @@
  *
  * ref.h - Header for reference implementations
  *
- * Copyright (c) 2021 Basil Hussain
+ * Copyright (c) 2023 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,10 @@
 extern uint8_t swap_ref(const uint8_t value);
 extern uint16_t bswap_16_ref(const uint16_t value);
 extern uint32_t bswap_32_ref(const uint32_t value);
+
+extern uint8_t reflect_8_ref(uint8_t value);
+extern uint16_t reflect_16_ref(uint16_t value);
+extern uint32_t reflect_32_ref(uint32_t value);
 
 extern uint8_t pop_count_8_ref(uint8_t value);
 extern uint8_t pop_count_16_ref(uint16_t value);

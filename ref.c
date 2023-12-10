@@ -2,7 +2,7 @@
  *
  * ref.c - Reference implementations
  *
- * Copyright (c) 2022 Basil Hussain
+ * Copyright (c) 2023 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,48 @@ uint16_t bswap_16_ref(const uint16_t value) {
 
 uint32_t bswap_32_ref(const uint32_t value) {
 	return ((value & 0x000000FFUL) << 24) | ((value & 0x0000FF00UL) << 8) | ((value & 0x00FF0000UL) >> 8) | ((value & 0xFF000000UL) >> 24);
+}
+
+uint8_t reflect_8_ref(uint8_t value) {
+	uint8_t result = value;
+	uint8_t shifts = (sizeof(value) * CHAR_BIT) - 1;
+
+	for(value >>= 1; value; value >>= 1) {
+		result <<= 1;
+		result |= value & 1;
+		shifts--;
+	}
+	result <<= shifts;
+
+	return result;
+}
+
+uint16_t reflect_16_ref(uint16_t value) {
+	uint16_t result = value;
+	uint8_t shifts = (sizeof(value) * CHAR_BIT) - 1;
+
+	for(value >>= 1; value; value >>= 1) {
+		result <<= 1;
+		result |= value & 1;
+		shifts--;
+	}
+	result <<= shifts;
+
+	return result;
+}
+
+uint32_t reflect_32_ref(uint32_t value) {
+	uint32_t result = value;
+	uint8_t shifts = (sizeof(value) * CHAR_BIT) - 1;
+
+	for(value >>= 1; value; value >>= 1) {
+		result <<= 1;
+		result |= value & 1;
+		shifts--;
+	}
+	result <<= shifts;
+
+	return result;
 }
 
 uint8_t ctz_8_ref(uint8_t value) {

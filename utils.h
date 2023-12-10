@@ -2,7 +2,7 @@
  *
  * utils.h - Header for STM8 pseudo-intrinsic bit-manipulation utility functions
  *
- * Copyright (c) 2022 Basil Hussain
+ * Copyright (c) 2023 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -63,6 +63,10 @@ typedef div_s16_t div_t;
 extern uint8_t swap(const uint8_t value) __naked __stack_args;
 extern uint16_t bswap_16(const uint16_t value) __naked __stack_args;
 extern uint32_t bswap_32(const uint32_t value) __naked __stack_args;
+
+extern uint8_t reflect_8(uint8_t value) __naked __stack_args;
+extern uint16_t reflect_16(uint16_t value) __naked __stack_args;
+extern uint32_t reflect_32(uint32_t value) __naked __stack_args;
 
 extern uint8_t pop_count_8(uint8_t value) __naked __stack_args;
 extern uint8_t pop_count_16(uint16_t value) __naked __stack_args;
