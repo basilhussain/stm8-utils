@@ -31,6 +31,38 @@
 uint8_t reflect_8(uint8_t value) __naked __stack_args {
 	(void)value;
 
+#ifdef REFLECT_LUT
+
+	// 12 cycles (exc. return), 24+16=40 bytes
+	__asm
+		; Load and mask upper nibble of argument value, swap it to lower
+		; position, and put into X reg.
+		ld a, (ASM_ARGS_SP_OFFSET+0, sp)
+		and a, #0xF0
+		swap a
+		clrw x
+		ld xl, a
+
+		; Load and mask lower nibble of argument value and put into Y reg.
+		ld a, (ASM_ARGS_SP_OFFSET+0, sp)
+		and a, #0x0F
+		clrw y
+		ld yl, a
+
+		; Lookup lower nibble reflected value in table and swap it into upper
+		; nibble of result. Then do same for upper nibble and put into lower
+		; nibble of result.
+		ld a, (_reflect_lut, y)
+		swap a
+		or a, (_reflect_lut, x)
+
+		; Return value is already in A reg.
+		ASM_RETURN
+	__endasm;
+
+#else
+
+	// unrolled 16 cycles (exc. return), 25 bytes
 	__asm
 		.macro reflect_8_shift
 			srl (ASM_ARGS_SP_OFFSET+0, sp)
@@ -57,4 +89,6 @@ uint8_t reflect_8(uint8_t value) __naked __stack_args {
 		; Return value is already in A reg.
 		ASM_RETURN
 	__endasm;
+
+#endif
 }

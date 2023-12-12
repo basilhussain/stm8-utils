@@ -224,9 +224,9 @@ To benchmark the library functions, the execution speed of each was compared wit
 | swap            |     470,011 |     270,011 |   57% |
 | bswap_16        |     430,011 |     330,011 |   77% |
 | bswap_32        |   1,300,018 |     410,017 |   32% |
-| reflect_8       |   1,480,008 |     390,008 |   26% |
-| reflect_16      |   3,210,014 |     900,014 |   28% |
-| reflect_32      |  12,760,014 |   2,890,014 |   23% |
+| reflect_8       |   1,480,008 |     350,008 |   24% |
+| reflect_16      |   3,210,014 |     600,014 |   19% |
+| reflect_32      |  12,760,014 |   1,000,014 |    8% |
 | pop_count_8     |     790,011 |     300,011 |   38% |
 | pop_count_16    |   1,770,011 |     410,010 |   23% |
 | pop_count_32    |   6,160,018 |     570,018 |    9% |
@@ -301,8 +301,8 @@ The implementation used for functions that count leading zeroes is controlled by
 
 The implementation used for functions that reverse/reflect bits is controlled by the following definition:
 
-* When `REFLECT_UNROLLED` is defined, the loops of the iterative algorithms are unrolled. This is the fastest method, and the default for this library.
-* If not defined, iterative loops are retained, which has a smaller size, but is slower.
+* When `REFLECT_LUT` is defined, a 16-byte look-up table is used. This is the fastest method, and the default for this library.
+* If not defined, an iterative method is used, which has a smaller size, but is slower.
 
 # Test Program
 

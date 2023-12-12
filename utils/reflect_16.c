@@ -31,6 +31,54 @@
 uint16_t reflect_16(uint16_t value) __naked __stack_args {
 	(void)value;
 
+#ifdef REFLECT_LUT
+
+	// 33 cycles (exc. return), 58+16=74 bytes
+	__asm
+		.macro reflect_16_rev_swap_nibbles stk_off
+			; Load byte from given stack offset, mask upper nibble, swap it to
+			; lower position, and put into X reg.
+			ld a, (ASM_ARGS_SP_OFFSET+stk_off, sp)
+			and a, #0xF0
+			swap a
+			clrw x
+			ld xl, a
+
+			; Re-load byte from given stack offset, mask lower nibble, and put
+			; into Y reg.
+			ld a, (ASM_ARGS_SP_OFFSET+stk_off, sp)
+			and a, #0x0F
+			clrw y
+			ld yl, a
+
+			; Lookup lower nibble reflected value in table and swap it into
+			; upper nibble of result. Then do same for upper nibble and put into
+			; lower nibble of result. Copy back to given stack offset.
+			ld a, (_reflect_lut, y)
+			swap a
+			or a, (_reflect_lut, x)
+			ld (ASM_ARGS_SP_OFFSET+stk_off, sp), a
+		.endm
+
+		; Load word from argument value to X register, swap the bytes within it,
+		; then load back to stack.
+		ldw x, (ASM_ARGS_SP_OFFSET+0, sp)
+		swapw x
+		ldw (ASM_ARGS_SP_OFFSET+0, sp), x
+
+		; Using the LUT, reverse and swap the individual nibbles of each stack
+		; byte.
+		reflect_16_rev_swap_nibbles 0
+		reflect_16_rev_swap_nibbles 1
+
+		; Copy resulting value from stack to X register for return value.
+		ldw x, (ASM_ARGS_SP_OFFSET+0, sp)
+		ASM_RETURN
+	__endasm;
+
+#else
+
+	// unrolled 64 cycles (exc. return), 81 bytes
 	__asm
 		.macro reflect_16_shift
 			srl (ASM_ARGS_SP_OFFSET+0, sp)
@@ -58,4 +106,6 @@ uint16_t reflect_16(uint16_t value) __naked __stack_args {
 		; Return value is already in X reg.
 		ASM_RETURN
 	__endasm;
+
+#endif
 }

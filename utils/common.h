@@ -2,7 +2,7 @@
  *
  * common.c - Header for common look-up tables
  *
- * Copyright (c) 2022 Basil Hussain
+ * Copyright (c) 2023 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,10 @@
 #else
 #define ASM_ARGS_SP_OFFSET 3
 #define ASM_RETURN ret
+#endif
+
+#if defined(REFLECT_LUT)
+extern const uint8_t reflect_lut[16];
 #endif
 
 #if defined(POP_COUNT_LUT_LARGE)

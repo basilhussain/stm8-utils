@@ -17,7 +17,7 @@
 					<Add option="-DPOP_COUNT_LUT_LARGE" />
 					<Add option="-DCTZ_LUT_LARGE" />
 					<Add option="-DCLZ_LUT_LARGE" />
-					<Add option="-DREFLECT_UNROLLED" />
+					<Add option="-DREFLECT_LUT" />
 				</Compiler>
 			</Target>
 			<Target title="Library (Large)">
@@ -32,7 +32,7 @@
 					<Add option="-DPOP_COUNT_LUT_LARGE" />
 					<Add option="-DCTZ_LUT_LARGE" />
 					<Add option="-DCLZ_LUT_LARGE" />
-					<Add option="-DREFLECT_UNROLLED" />
+					<Add option="-DREFLECT_LUT" />
 				</Compiler>
 			</Target>
 			<Target title="Test">

@@ -2,7 +2,7 @@
  *
  * common.c - Common look-up tables
  *
- * Copyright (c) 2020 Basil Hussain
+ * Copyright (c) 2023 Basil Hussain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,15 @@
 
 #include <stdint.h>
 #include "common.h"
+
+#if defined(REFLECT_LUT)
+
+// Look-up table for nibble values with the bits reflected/reversed.
+const uint8_t reflect_lut[16] = {
+	0,8,4,12,2,10,6,14,1,9,5,13,3,11,7,15
+};
+
+#endif
 
 #if defined(POP_COUNT_LUT_LARGE)
 
